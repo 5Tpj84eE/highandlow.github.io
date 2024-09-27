@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ハイ＆ローゲーム</title>
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f9f9f9;
+      margin: 0;
+    }
+    .card-container {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      gap: 20px; /* カード同士の余白を追加 */
+    }
+    .card {
+      width: 100px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      font-size: 2rem;
+    }
+    .hidden-card {
+      background-color: #eee;
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      max-width: 300px;
+    }
+    .mdl-button {
+      width: 100px;
+    }
+    .probability {
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+    /* スマートフォンでも横並びのままにする */
+    @media (max-width: 600px) {
+      .card-container {
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 10px; /* スマホ表示用に余白調整 */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h3>ハイ＆ロー</h3>
+
+  <div class="card-container">
+    <div id="firstCard" class="card">7</div>
+    <div id="secondCard" class="card hidden-card">?</div>
+  </div>
+
+  <p id="questionText">? は 7 よりも……</p>
+
+  <div class="button-container" id="gameButtons">
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="highButton">大きい</button>
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="lowButton">小さい</button>
+  </div>
+
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="restartButton" style="display: none;">もっかい</button>
+
+  <div class="probability" id="probabilityDisplay">
+    <p>大きい確率: <span id="highProbability"></span></p>
+    <p>小さい確率: <span id="lowProbability"></span></p>
+    <p id="probabilityFormula"></p>
+  </div>
+
+  <script>
+    let firstCardValue = 7;
+    let secondCardValue;
+    const firstCard = document.getElementById('firstCard');
+    const secondCard = document.getElementById('secondCard');
+    const questionText = document.getElementById('questionText');
+    const gameButtons = document.getElementById('gameButtons');
+    const highButton = document.getElementById('highButton');
+    const lowButton = document.getElementById('lowButton');
+    const restartButton = document.getElementById('restartButton');
+    const highProbability = document.getElementById('highProbability');
+    const lowProbability = document.getElementById('lowProbability');
+    const probabilityFormula = document.getElementById('probabilityFormula');
+
+    function getRandomCard(exclude) {
+      let card;
+      do {
+        card = Math.floor(Math.random() * 13) + 1;
+      } while (card === exclude);
+      return card;
+    }
+
+    function revealSecondCard() {
+      secondCard.classList.remove('hidden-card');
+      secondCard.textContent = secondCardValue;
+    }
+
+    function checkGuess(isHigh) {
+      revealSecondCard();
+      const isCorrect = (isHigh && secondCardValue > firstCardValue) || (!isHigh && secondCardValue < firstCardValue);
+      questionText.textContent = isCorrect ? '正解！' : '不正解！';
+      gameButtons.style.display = 'none';
+      restartButton.style.display = 'inline-block';
+    }
+
+    function calculateProbabilities() {
+      const largerCount = 13 - firstCardValue;
+      const smallerCount = firstCardValue - 1;
+      const highProb = (largerCount / 12 * 100).toFixed(2);
+      const lowProb = (smallerCount / 12 * 100).toFixed(2);
+
+      highProbability.textContent = `${highProb}%`;
+      lowProbability.textContent = `${lowProb}%`;
+
+      probabilityFormula.innerHTML = `
+        <strong>計算式:</strong><br>
+        大きい確率 = (13 - ${firstCardValue}) / 12 = ${largerCount}/12 = ${highProb}%<br>
+        小さい確率 = (${firstCardValue} - 1) / 12 = ${smallerCount}/12 = ${lowProb}%`;
+    }
+
+    function restartGame() {
+      firstCardValue = getRandomCard(null);
+      secondCardValue = getRandomCard(firstCardValue);
+      firstCard.textContent = firstCardValue;
+      secondCard.textContent = '?';
+      secondCard.classList.add('hidden-card');
+      questionText.textContent = `? は ${firstCardValue} よりも……`;
+      gameButtons.style.display = 'flex';
+      restartButton.style.display = 'none';
+
+      // 確率の計算を更新
+      calculateProbabilities();
+    }
+
+    highButton.addEventListener('click', () => checkGuess(true));
+    lowButton.addEventListener('click', () => checkGuess(false));
+    restartButton.addEventListener('click', restartGame);
+
+    // 初回のランダムカード設定
+    restartGame();
+  </script>
+
+</body>
+</html>
