@@ -48,6 +48,10 @@
       margin-top: 20px;
       font-size: 1rem;
     }
+    .correct, .incorrect {
+      font-weight: bold;
+      font-size: 2rem; /* 文字サイズを大きく */
+    }
     /* スマートフォンでも横並びのままにする */
     @media (max-width: 600px) {
       .card-container {
@@ -112,7 +116,7 @@
     function checkGuess(isHigh) {
       revealSecondCard();
       const isCorrect = (isHigh && secondCardValue > firstCardValue) || (!isHigh && secondCardValue < firstCardValue);
-      questionText.textContent = isCorrect ? '正解！' : '不正解！';
+      questionText.innerHTML = isCorrect ? '<span class="correct">正解！</span>' : '<span class="incorrect">不正解！</span>';
       gameButtons.style.display = 'none';
       restartButton.style.display = 'inline-block';
     }
