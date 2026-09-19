@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ハイ＆ロー</title>
   <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <!-- 丸ゴシック系フォントの追加 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&display=swap">
   <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   <style>
     body {
@@ -13,51 +15,131 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background-color: #f9f9f9;
+      background-color: #FFFDE7; /* やさしいひよこ色の背景 */
       margin: 0;
+      font-family: 'M PLUS Rounded 1c', sans-serif;
+      color: #4A4A4A;
     }
+
+    h4 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #FF6F00; /* あたたかいオレンジ */
+      margin: 15px 0;
+      text-shadow: 2px 2px 0px #FFE082;
+    }
+
     .card-container {
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
       margin: 20px 0;
-      gap: 20px; /* カード同士の余白を追加 */
+      gap: 20px;
     }
+
     .card {
-      width: 100px;
-      height: 150px;
+      width: 120px;
+      height: 170px;
       display: flex;
       justify-content: center;
       align-items: center;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      font-size: 2rem;
+      border: 5px solid #FFB74D;
+      border-radius: 24px; /* 大きめの丸み */
+      font-size: 3.5rem;
+      font-weight: bold;
+      background-color: #FFFFFF;
+      color: #E65100;
+      /* ぷっくりとした立体感のある影 */
+      box-shadow: 0 8px 0px #FFE082, 0 10px 15px rgba(0,0,0,0.08);
     }
+
     .hidden-card {
-      background-color: #eee;
+      background-color: #E1F5FE;
+      border-color: #81D4FA;
+      color: #0288D1;
+      box-shadow: 0 8px 0px #B3E5FC, 0 10px 15px rgba(0,0,0,0.08);
     }
+
+    #questionText {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin: 15px 0;
+      color: #5D4037;
+    }
+
     .button-container {
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
+      gap: 15px;
       width: 100%;
-      max-width: 300px;
+      max-width: 360px;
     }
+
+    /* 押しやすくてぷっくりした丸型ボタン */
     .mdl-button {
-      width: 100px;
-    }
-    .probability {
-      margin-top: 20px;
-      font-size: 1rem;
-    }
-    .correct, .incorrect {
+      height: 60px;
+      min-width: 130px;
+      font-size: 1.4rem !important;
       font-weight: bold;
-      font-size: 2rem; /* 文字サイズを大きく */
+      border-radius: 30px !important;
+      font-family: 'M PLUS Rounded 1c', sans-serif;
+      box-shadow: 0 6px 0px rgba(0,0,0,0.15) !important;
+      transition: transform 0.1s, box-shadow 0.1s;
     }
-    /* スマートフォンでも横並びのままにする */
+
+    .mdl-button:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0px rgba(0,0,0,0.15) !important;
+    }
+
+    #highButton {
+      background-color: #FF5252 !important; /* 元気な赤 */
+      color: #FFFFFF !important;
+    }
+
+    #lowButton {
+      background-color: #42A5F5 !important; /* さわやかな青 */
+      color: #FFFFFF !important;
+    }
+
+    #restartButton {
+      background-color: #66BB6A !important; /* やさしい緑 */
+      color: #FFFFFF !important;
+      padding: 0 35px;
+    }
+
+    .probability {
+      margin-top: 25px;
+      padding: 15px 20px;
+      background-color: #FFFFFF;
+      border-radius: 20px;
+      border: 3px dashed #FFD54F; /* 点線の枠 */
+      font-size: 0.95rem;
+      color: #5D4037;
+      text-align: center;
+    }
+
+    .correct {
+      font-weight: bold;
+      font-size: 2.5rem;
+      color: #FF4081; /* はっきりしたピンク */
+    }
+
+    .incorrect {
+      font-weight: bold;
+      font-size: 2.5rem;
+      color: #7C4DFF; /* やわらかい紫 */
+    }
+
     @media (max-width: 600px) {
       .card-container {
         flex-direction: row;
-        justify-content: space-around;
-        gap: 10px; /* スマホ表示用に余白調整 */
+        justify-content: center;
+        gap: 15px;
+      }
+      .card {
+        width: 100px;
+        height: 140px;
+        font-size: 2.8rem;
       }
     }
   </style>
@@ -78,7 +160,7 @@
     <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="lowButton">小さい</button>
   </div>
 
-  <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="restartButton" style="display: none;">もっかい</button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="restartButton" style="display: none;">もういっかい</button>
 
   <div class="probability" id="probabilityDisplay">
     <p>大きい確率: <span id="highProbability"></span></p>
